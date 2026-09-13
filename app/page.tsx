@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { DitherImage } from "@/components/public/dither-image";
+import { DitherField } from "@/components/public/dither-field";
 import { Reveal } from "@/components/public/reveal";
 import { SiteFooter } from "@/components/public/site-footer";
 import { SiteHeader } from "@/components/public/site-header";
@@ -39,7 +39,6 @@ export default async function Home() {
   const intro =
     profile?.short_intro ??
     "I design and build web products from interface to infrastructure.";
-  const portraitUrl = getMediaUrl(profile?.portrait_path);
   const availability =
     profile?.availability_text ??
     (profile?.available_for_work ? "Available for selected work" : null);
@@ -50,26 +49,41 @@ export default async function Home() {
 
       <main className="flex-1">
         {/* ——— Hero ——— */}
-        <section className="mx-auto grid max-w-[1440px] grid-cols-4 gap-6 px-6 pt-14 pb-16 md:grid-cols-12 md:px-10 md:pt-20 md:pb-24">
-          <div className="col-span-4 md:col-span-7">
+        <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden border-b border-border">
+          <DitherField className="absolute inset-0" />
+          {/* Readability scrim: keeps the center calm over the dither. */}
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(ellipse 60% 55% at 50% 50%, rgba(238,233,223,0.92) 0%, rgba(238,233,223,0.72) 45%, rgba(238,233,223,0) 78%)",
+            }}
+          />
+
+          <div className="relative z-10 mx-auto flex w-full max-w-[1440px] flex-col items-center px-6 py-24 text-center md:px-10 md:py-32">
             <p className="font-mono text-xs tracking-[0.2em] uppercase text-muted">
               Portfolio / 2026
             </p>
             <h1
-              className="mt-6 text-[clamp(4rem,14vw,11rem)] leading-[0.85] tracking-tight uppercase"
+              className="mt-6 text-[clamp(3.5rem,13vw,10rem)] leading-[0.85] tracking-tight uppercase"
               style={{ fontFamily: "var(--font-display)" }}
             >
               {title}
             </h1>
-            <p className="mt-8 max-w-md text-lg leading-relaxed">{intro}</p>
-            <div className="mt-6 flex flex-col gap-2 font-mono text-xs tracking-[0.2em] uppercase text-muted">
+            <p className="mt-8 max-w-xl text-lg leading-relaxed text-balance">
+              {intro}
+            </p>
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 font-mono text-xs tracking-[0.2em] uppercase text-muted">
               {profile?.location && <span>{profile.location}</span>}
-              {availability && <span className="text-accent">{availability}</span>}
+              {availability && (
+                <span className="text-accent">{availability}</span>
+              )}
             </div>
-            <div className="mt-10 flex flex-wrap gap-4 font-mono text-xs tracking-[0.2em] uppercase">
+            <div className="mt-10 flex flex-wrap justify-center gap-4 font-mono text-xs tracking-[0.2em] uppercase">
               <Link
                 href="/#work"
-                className="border border-border px-6 py-4 transition-colors hover:border-accent hover:text-accent"
+                className="border border-foreground/40 bg-background/60 px-6 py-4 backdrop-blur-[2px] transition-colors hover:border-accent hover:text-accent"
               >
                 View selected work
               </Link>
@@ -80,24 +94,6 @@ export default async function Home() {
                 Contact ↗
               </Link>
             </div>
-          </div>
-          <div className="col-span-4 md:col-span-5">
-            {portraitUrl ? (
-              <DitherImage
-                src={portraitUrl}
-                alt={name}
-                className="border border-border"
-              />
-            ) : (
-              <div className="flex aspect-[4/5] items-center justify-center border border-border bg-surface">
-                <span className="font-mono text-xs tracking-[0.2em] uppercase text-muted">
-                  Portrait — set in admin
-                </span>
-              </div>
-            )}
-            <p className="mt-3 font-mono text-xs tracking-[0.2em] uppercase text-muted">
-              Fig. 01 — Portrait, ordered dither
-            </p>
           </div>
         </section>
 
