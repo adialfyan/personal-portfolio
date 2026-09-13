@@ -1,4 +1,5 @@
-import { createPublicClient as createClient } from "@/lib/supabase/public";
+import { createPublicClient } from "@/lib/supabase/public";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type {
   ProjectCard,
   ProjectDetail,
@@ -6,6 +7,18 @@ import type {
   SocialLink,
   Technology,
 } from "./types";
+
+/**
+ * Returns null when Supabase env is missing (e.g. build without env vars).
+ * Callers degrade to empty defaults instead of crashing prerender.
+ */
+function getDb(): SupabaseClient | null {
+  try {
+    return createPublicClient();
+  } catch {
+    return null;
+  }
+}
 
 interface ProjectTechJoin {
   technologies: Technology | Technology[] | null;
@@ -32,7 +45,8 @@ const projectCardSelect = `
 `;
 
 export async function getSiteProfile(): Promise<Profile | null> {
-  const supabase = await createClient();
+  const supabase = getDb();
+  if (!supabase) return null;
   const { data, error } = await supabase
     .from("profile")
     .select("*")
@@ -50,7 +64,8 @@ export async function getVisibleSocialLinks(
   profileId: string | null,
 ): Promise<SocialLink[]> {
   if (!profileId) return [];
-  const supabase = await createClient();
+  const supabase = getDb();
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("social_links")
     .select("*")
@@ -65,7 +80,8 @@ export async function getVisibleSocialLinks(
 }
 
 export async function getFeaturedProjects(): Promise<ProjectCard[]> {
-  const supabase = await createClient();
+  const supabase = getDb();
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("projects")
     .select(projectCardSelect)
@@ -86,7 +102,8 @@ export async function getFeaturedProjects(): Promise<ProjectCard[]> {
 }
 
 export async function getPublishedProjectSlugs(): Promise<string[]> {
-  const supabase = await createClient();
+  const supabase = getDb();
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("projects")
     .select("slug")
@@ -101,7 +118,8 @@ export async function getPublishedProjectSlugs(): Promise<string[]> {
 export async function getProjectBySlug(
   slug: string,
 ): Promise<ProjectDetail | null> {
-  const supabase = await createClient();
+  const supabase = getDb();
+  if (!supabase) return null;
   const { data, error } = await supabase
     .from("projects")
     .select(
@@ -138,7 +156,9 @@ export async function getProjectBySlug(
 export async function getAdjacentProjects(
   slug: string,
 ): Promise<{ previous: ProjectCard | null; next: ProjectCard | null }> {
-  const supabase = await createClient();
+  const empty = { previous: null, next: null };
+  const supabase = getDb();
+  if (!supabase) return empty;
   const { data, error } = await supabase
     .from("projects")
     .select("id, title, slug, sort_order")
@@ -146,7 +166,7 @@ export async function getAdjacentProjects(
     .order("sort_order", { ascending: true });
   if (error) {
     console.error("getAdjacentProjects:", error.message);
-    return { previous: null, next: null };
+    return empty;
   }
   const list = (data ?? []) as Array<{
     id: string;
@@ -155,7 +175,7 @@ export async function getAdjacentProjects(
     sort_order: number;
   }>;
   const idx = list.findIndex((p) => p.slug === slug);
-  if (idx === -1) return { previous: null, next: null };
+  if (idx === -1) return empty;
   const toCard = (
     p: { id: string; title: string; slug: string } | undefined,
   ): ProjectCard | null =>
