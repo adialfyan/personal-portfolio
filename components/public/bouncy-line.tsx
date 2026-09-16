@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useSyncExternalStore } from "react";
 import gsap from "gsap";
 
 export interface BouncyLineProps {
@@ -30,7 +30,11 @@ export function BouncyLine({
 }: BouncyLineProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const pathRef = useRef<SVGPathElement | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false
+  );
 
   // Animation state (ref-based to prevent React re-renders during 120fps motion)
   const widthRef = useRef<number>(0);
@@ -45,7 +49,6 @@ export function BouncyLine({
   });
 
   useLayoutEffect(() => {
-    setMounted(true);
     const container = containerRef.current;
     const path = pathRef.current;
     if (!container || !path) return;

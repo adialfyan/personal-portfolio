@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 export interface SakuraCornerBranchProps {
@@ -297,80 +297,84 @@ export function SakuraCornerBranch({ className = "" }: SakuraCornerBranchProps) 
   }, []);
 
   // 2. Falling Petal Particle Animator (Gugur)
-  const dropPetal = (index: number, initialDelay = 0) => {
-    const el = petalRefs.current[index];
-    const container = containerRef.current;
-    if (!el || !container) return;
+  const dropPetalRef = useRef<(index: number, initialDelay?: number) => void>(() => {});
 
-    const def = PETAL_DEFINITIONS[index];
-    const rect = container.getBoundingClientRect();
-    const width = rect.width || 440;
-    const height = rect.height || 440;
+  useEffect(() => {
+    dropPetalRef.current = (index: number, initialDelay = 0) => {
+      const el = petalRefs.current[index];
+      const container = containerRef.current;
+      if (!el || !container) return;
 
-    const startX = (def.pctX / 100) * width + (Math.random() * 16 - 8);
-    const startY = (def.pctY / 100) * height + (Math.random() * 16 - 8);
+      const def = PETAL_DEFINITIONS[index];
+      const rect = container.getBoundingClientRect();
+      const width = rect.width || 440;
+      const height = rect.height || 440;
 
-    const driftX = def.driftX * (0.85 + Math.random() * 0.35);
-    const fallY = def.fallDist * (0.85 + Math.random() * 0.3);
-    const duration = def.duration * (0.9 + Math.random() * 0.25);
-    const rotationTotal = (Math.random() > 0.5 ? 1 : -1) * (45 + Math.random() * 35);
+      const startX = (def.pctX / 100) * width + (Math.random() * 16 - 8);
+      const startY = (def.pctY / 100) * height + (Math.random() * 16 - 8);
 
-    gsap.set(el, {
-      x: startX,
-      y: startY,
-      opacity: 0,
-      rotationZ: Math.random() * 40 - 20,
-      rotationY: 0,
-      scale: 0.85,
-      force3D: true,
-    });
+      const driftX = def.driftX * (0.85 + Math.random() * 0.35);
+      const fallY = def.fallDist * (0.85 + Math.random() * 0.3);
+      const duration = def.duration * (0.9 + Math.random() * 0.25);
+      const rotationTotal = (Math.random() > 0.5 ? 1 : -1) * (45 + Math.random() * 35);
 
-    const tl = gsap.timeline({
-      delay: initialDelay,
-      onComplete: () => {
-        if (isHoveredRef.current) {
-          dropPetal(index, 0.3 + Math.random() * 0.5);
-        }
-      },
-    });
+      gsap.set(el, {
+        x: startX,
+        y: startY,
+        opacity: 0,
+        rotationZ: Math.random() * 40 - 20,
+        rotationY: 0,
+        scale: 0.85,
+        force3D: true,
+      });
 
-    tl.to(el, {
-      opacity: 0.92,
-      scale: 1,
-      duration: 0.45,
-      ease: "power1.out",
-    }, 0);
+      const tl = gsap.timeline({
+        delay: initialDelay,
+        onComplete: () => {
+          if (isHoveredRef.current) {
+            dropPetalRef.current(index, 0.3 + Math.random() * 0.5);
+          }
+        },
+      });
 
-    tl.to(el, {
-      y: startY + fallY,
-      duration: duration,
-      ease: "sine.in",
-    }, 0);
+      tl.to(el, {
+        opacity: 0.92,
+        scale: 1,
+        duration: 0.45,
+        ease: "power1.out",
+      }, 0);
 
-    tl.to(el, {
-      keyframes: [
-        { x: startX + driftX * 0.4, duration: duration * 0.33, ease: "sine.inOut" },
-        { x: startX + driftX * 0.85, duration: duration * 0.33, ease: "sine.inOut" },
-        { x: startX + driftX, duration: duration * 0.34, ease: "sine.out" },
-      ],
-    }, 0);
+      tl.to(el, {
+        y: startY + fallY,
+        duration: duration,
+        ease: "sine.in",
+      }, 0);
 
-    tl.to(el, {
-      rotationZ: `+=${rotationTotal}`,
-      rotationY: 360 * (Math.random() > 0.5 ? 1 : -1),
-      duration: duration,
-      ease: "none",
-    }, 0);
+      tl.to(el, {
+        keyframes: [
+          { x: startX + driftX * 0.4, duration: duration * 0.33, ease: "sine.inOut" },
+          { x: startX + driftX * 0.85, duration: duration * 0.33, ease: "sine.inOut" },
+          { x: startX + driftX, duration: duration * 0.34, ease: "sine.out" },
+        ],
+      }, 0);
 
-    tl.to(el, {
-      opacity: 0,
-      scale: 0.75,
-      duration: 0.65,
-      ease: "power2.in",
-    }, duration - 0.65);
+      tl.to(el, {
+        rotationZ: `+=${rotationTotal}`,
+        rotationY: 360 * (Math.random() > 0.5 ? 1 : -1),
+        duration: duration,
+        ease: "none",
+      }, 0);
 
-    petalTweens.current[index] = tl;
-  };
+      tl.to(el, {
+        opacity: 0,
+        scale: 0.75,
+        duration: 0.65,
+        ease: "power2.in",
+      }, duration - 0.65);
+
+      petalTweens.current[index] = tl;
+    };
+  }, []);
 
   // 3. Hover Handler: Sequential Morphing Bloom (Satu Persatu) with MorphText Liquid Filter
   const handleMouseEnter = () => {
@@ -448,7 +452,7 @@ export function SakuraCornerBranch({ className = "" }: SakuraCornerBranchProps) 
 
     // Trigger Falling Petals (Gugur)
     PETAL_DEFINITIONS.forEach((petal, i) => {
-      dropPetal(i, petal.baseDelay);
+      dropPetalRef.current(i, petal.baseDelay);
     });
   };
 

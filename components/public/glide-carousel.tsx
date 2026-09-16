@@ -86,7 +86,7 @@ export function GlideCarousel({ projects }: GlideCarouselProps) {
   const dragStartRef = useRef({ x: 0, scrollStartX: 0 });
   const lastMoveRef = useRef({ x: 0, time: 0, vx: 0 });
   const hasDraggedRef = useRef(false);
-  const lastTimeRef = useRef(performance.now());
+  const lastTimeRef = useRef(0);
   const activeIndexRef = useRef(0);
   const [activeIndex, setActiveIndex] = useState(0);
 
