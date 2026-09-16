@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
+import { Geist, Newsreader } from "next/font/google";
+import { SmoothScroll } from "@/components/public/smooth-scroll";
 import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
+  preload: true,
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const instrumentSerif = Instrument_Serif({
+const newsreader = Newsreader({
   variable: "--font-display",
   subsets: ["latin"],
-  weight: "400",
+  style: ["normal", "italic"],
+  weight: ["300", "400", "500", "600"],
+  display: "swap",
+  preload: true,
 });
 
 const siteUrl =
@@ -24,14 +25,14 @@ const siteUrl =
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Personal Portfolio",
-    template: "%s | Personal Portfolio",
+    default: "Adi Alfian Hafis — Portfolio",
+    template: "%s | Adi Alfian Hafis",
   },
   description:
-    "Full-stack developer portfolio — selected work, about, and contact.",
+    "Software developer portfolio — selected work, about, and contact.",
   openGraph: {
     type: "website",
-    siteName: "Personal Portfolio",
+    siteName: "Adi Alfian Hafis",
   },
   twitter: {
     card: "summary_large_image",
@@ -42,9 +43,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={`${geistSans.variable} ${newsreader.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body
+        suppressHydrationWarning
+        className="min-h-full flex flex-col bg-background text-foreground"
+      >
+        <SmoothScroll />
         {children}
       </body>
     </html>

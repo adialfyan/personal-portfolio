@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import type { Profile, ProjectDetail, SocialLink, Technology } from "./types";
+import type { Profile, ProjectDetail, SocialLink, Technology, Writing, ShelfItem } from "./types";
 
 export async function getAdminProfile(): Promise<Profile | null> {
   const supabase = await createClient();
@@ -108,3 +108,86 @@ export async function getAllTechnologies(): Promise<Technology[]> {
   }
   return (data as Technology[]) ?? [];
 }
+
+// ---------------------------------------------------------------------------
+// Writings Admin Queries
+// ---------------------------------------------------------------------------
+export interface AdminWritingListItem {
+  id: string;
+  title: string;
+  slug: string;
+  category: string;
+  reading_time_minutes: number;
+  status: string;
+  is_featured: boolean;
+  sort_order: number;
+  published_at: string | null;
+  updated_at: string;
+}
+
+export async function getAllWritingsAdmin(): Promise<AdminWritingListItem[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("writings")
+    .select("id, title, slug, category, reading_time_minutes, status, is_featured, sort_order, published_at, updated_at")
+    .order("sort_order", { ascending: true })
+    .order("updated_at", { ascending: false });
+  if (error) {
+    console.error("getAllWritingsAdmin:", error.message);
+    return [];
+  }
+  return (data as AdminWritingListItem[]) ?? [];
+}
+
+export async function getAdminWritingById(id: string): Promise<Writing | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("writings")
+    .select("*, writing_tags(tag)")
+    .eq("id", id)
+    .maybeSingle();
+  if (error || !data) {
+    if (error) console.error("getAdminWritingById:", error.message);
+    return null;
+  }
+  const row = data as Record<string, unknown>;
+  const tags = Array.isArray(row.writing_tags)
+    ? (row.writing_tags as Array<{ tag: string }>).map((t) => t.tag)
+    : [];
+  return {
+    ...(row as object),
+    tags,
+  } as Writing;
+}
+
+// ---------------------------------------------------------------------------
+// Shelf Admin Queries
+// ---------------------------------------------------------------------------
+export async function getAllShelfItemsAdmin(): Promise<ShelfItem[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("shelf_items")
+    .select("*")
+    .order("sort_order", { ascending: true })
+    .order("logged_at", { ascending: false });
+  if (error) {
+    console.error("getAllShelfItemsAdmin:", error.message);
+    return [];
+  }
+  return (data as ShelfItem[]) ?? [];
+}
+
+export async function getAdminShelfItemById(id: string): Promise<ShelfItem | null> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("shelf_items")
+    .select("*")
+    .eq("id", id)
+    .maybeSingle();
+  if (error || !data) {
+    if (error) console.error("getAdminShelfItemById:", error.message);
+    return null;
+  }
+  return data as ShelfItem;
+}
+

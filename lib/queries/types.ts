@@ -81,3 +81,52 @@ export interface ProjectDetail extends Project {
   links: ProjectLink[];
   media: ProjectMedia[];
 }
+
+// ---------------------------------------------------------------------------
+// Writings (Papers, Essays, Notes, Architecture Whitepapers)
+// ---------------------------------------------------------------------------
+export type WritingCategory = "paper" | "essay" | "note" | "architecture";
+
+export interface Writing {
+  id: string;
+  title: string;
+  slug: string;
+  subtitle: string | null;
+  summary: string | null;
+  content: string;
+  category: WritingCategory;
+  reading_time_minutes: number;
+  status: string;
+  is_featured: boolean;
+  sort_order: number;
+  cover_image_path: string | null;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+  tags?: string[];
+}
+
+export type WritingCard = Omit<Writing, "content">;
+
+// ---------------------------------------------------------------------------
+// Shelf (Films, Music, Books, Curated Culture Archive)
+// ---------------------------------------------------------------------------
+export type ShelfMediaType = "film" | "music" | "book" | "article";
+
+export interface ShelfItem {
+  id: string;
+  title: string;
+  media_type: ShelfMediaType;
+  creator: string;
+  year: string | null;
+  notes: string | null;
+  rating: number | null;
+  cover_image_path: string | null;
+  external_url: string | null;
+  is_favorite: boolean;
+  sort_order: number;
+  logged_at: string;
+  created_at: string;
+  updated_at: string;
+}
+

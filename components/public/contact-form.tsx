@@ -67,7 +67,7 @@ export function ContactForm() {
     <form onSubmit={onSubmit} className="space-y-5" noValidate={false}>
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block">
-          <span className="mb-2 block font-mono text-xs tracking-[0.2em] uppercase text-muted">
+          <span className="mb-2 block text-xs font-medium tracking-[0.2em] uppercase text-muted">
             Name
           </span>
           <input
@@ -81,7 +81,7 @@ export function ContactForm() {
           />
         </label>
         <label className="block">
-          <span className="mb-2 block font-mono text-xs tracking-[0.2em] uppercase text-muted">
+          <span className="mb-2 block text-xs font-medium tracking-[0.2em] uppercase text-muted">
             Email
           </span>
           <input
@@ -96,7 +96,7 @@ export function ContactForm() {
         </label>
       </div>
       <label className="block">
-        <span className="mb-2 block font-mono text-xs tracking-[0.2em] uppercase text-muted">
+        <span className="mb-2 block text-xs font-medium tracking-[0.2em] uppercase text-muted">
           Subject <span className="opacity-60">(optional)</span>
         </span>
         <input
@@ -107,7 +107,7 @@ export function ContactForm() {
         />
       </label>
       <label className="block">
-        <span className="mb-2 block font-mono text-xs tracking-[0.2em] uppercase text-muted">
+        <span className="mb-2 block text-xs font-medium tracking-[0.2em] uppercase text-muted">
           Message
         </span>
         <textarea
@@ -137,7 +137,7 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={status === "sending"}
-        className="bg-dark px-8 py-4 font-mono text-xs tracking-[0.2em] uppercase text-ivory transition-colors hover:bg-accent disabled:opacity-50"
+        className="bg-dark px-8 py-4 text-xs font-medium tracking-[0.2em] uppercase text-ivory transition-colors hover:bg-neutral-800 disabled:opacity-50"
       >
         {status === "sending" ? "Sending…" : "Send message ↗"}
       </button>

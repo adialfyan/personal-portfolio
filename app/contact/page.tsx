@@ -16,7 +16,7 @@ export default async function ContactPage() {
   const profile = await getSiteProfile();
   const socialLinks = await getVisibleSocialLinks(profile?.id ?? null);
 
-  const name = profile?.full_name ?? "Personal Portfolio";
+  const name = profile?.full_name || "Adi Alfian Hafis";
 
   return (
     <div className="flex min-h-full flex-1 flex-col">
@@ -26,21 +26,21 @@ export default async function ContactPage() {
         <section className="bg-dark text-ivory">
           <div className="mx-auto max-w-[1440px] px-6 pt-14 pb-16 md:px-10 md:pt-20 md:pb-24">
             <Reveal>
-              <p className="font-mono text-xs tracking-[0.2em] uppercase opacity-60">
+              <p className="text-xs font-medium tracking-[0.2em] uppercase opacity-60">
                 Have something interesting in mind?
               </p>
               <h1
                 className="mt-6 max-w-5xl text-[clamp(3rem,10vw,8rem)] leading-[0.9] tracking-tight"
                 style={{ fontFamily: "var(--font-display)" }}
               >
-                Let&apos;s talk <span className="text-accent">↗</span>
+                Let&apos;s talk <span className="opacity-50">↗</span>
               </h1>
             </Reveal>
-            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 font-mono text-xs tracking-[0.2em] uppercase opacity-70">
+            <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 text-xs font-medium tracking-[0.2em] uppercase opacity-70">
               {profile?.email && (
                 <a
                   href={`mailto:${profile.email}`}
-                  className="hover:text-accent hover:opacity-100"
+                  className="transition-opacity hover:opacity-100"
                 >
                   {profile.email}
                 </a>
@@ -51,7 +51,7 @@ export default async function ContactPage() {
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:text-accent hover:opacity-100"
+                  className="transition-opacity hover:opacity-100"
                 >
                   {link.label ?? link.platform} ↗
                 </a>
@@ -63,7 +63,7 @@ export default async function ContactPage() {
         <section className="mx-auto max-w-[1440px] px-6 py-16 md:px-10 md:py-24">
           <div className="grid grid-cols-4 gap-10 md:grid-cols-12">
             <div className="col-span-4 md:col-span-4">
-              <h2 className="font-mono text-xs tracking-[0.2em] uppercase text-muted">
+              <h2 className="text-xs font-medium tracking-[0.2em] uppercase text-muted">
                 What to include
               </h2>
               <ul className="mt-4 space-y-3 leading-relaxed text-muted">

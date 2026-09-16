@@ -156,10 +156,15 @@ export function DitherImage({
         ctx.putImageData(out, 0, 0);
       };
 
-      const loop = (now: number) => {
-        if (disposed) return;
-        render(now);
-        raf = requestAnimationFrame(loop);
+      let needsRender = false;
+
+      const scheduleRender = () => {
+        if (needsRender || disposed || !visible) return;
+        needsRender = true;
+        raf = requestAnimationFrame((now) => {
+          needsRender = false;
+          render(now);
+        });
       };
 
       const onMove = (e: PointerEvent) => {
@@ -168,23 +173,28 @@ export function DitherImage({
           x: ((e.clientX - rect.left) / rect.width) * w,
           y: ((e.clientY - rect.top) / rect.height) * h,
         };
+        scheduleRender();
       };
+
       const onLeave = () => {
         pointer = null;
+        scheduleRender();
       };
 
       io = new IntersectionObserver(
         (entries) => {
           visible = entries[0]?.isIntersecting ?? true;
+          if (visible) scheduleRender();
         },
-        { threshold: 0 },
+        { threshold: 0 }
       );
       io.observe(wrap);
 
-      wrap.addEventListener("pointermove", onMove);
-      wrap.addEventListener("pointerleave", onLeave);
+      wrap.addEventListener("pointermove", onMove, { passive: true });
+      wrap.addEventListener("pointerleave", onLeave, { passive: true });
+
+      // Initial render once
       render(performance.now());
-      raf = requestAnimationFrame(loop);
 
       // Store cleanup on element for the effect teardown below.
       (wrap as unknown as { __ditherCleanup?: () => void }).__ditherCleanup =

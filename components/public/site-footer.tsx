@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BouncyLine } from "@/components/public/bouncy-line";
 import type { SocialLink } from "@/lib/queries/types";
 
 interface SiteFooterProps {
@@ -9,9 +10,10 @@ interface SiteFooterProps {
 
 export function SiteFooter({ email, socialLinks, location }: SiteFooterProps) {
   return (
-    <footer className="border-t border-border">
-      <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-6 py-8 font-mono text-xs tracking-[0.2em] uppercase text-muted md:flex-row md:items-center md:justify-between md:px-10">
-        <span>{location ?? "Indonesia"} — GMT+7</span>
+    <footer className="relative w-full">
+      <BouncyLine />
+      <div className="mx-auto flex max-w-[1440px] flex-col gap-6 px-6 py-8 text-xs font-medium tracking-[0.2em] uppercase text-muted md:flex-row md:items-center md:justify-between md:px-10">
+        <span>Adi Alfian Hafis &copy; {new Date().getFullYear()}</span>
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
           {email && (
             <a href={`mailto:${email}`} className="hover:text-accent">

@@ -11,9 +11,15 @@ function getStorageClient() {
   }
 }
 
-/** Resolve a `portfolio-media/...` storage path to a public URL. */
 export function getMediaUrl(path: string | null | undefined): string | null {
   if (!path) return null;
+  if (
+    path.startsWith("/") ||
+    path.startsWith("http://") ||
+    path.startsWith("https://")
+  ) {
+    return path;
+  }
   const client = getStorageClient();
   if (!client) return null;
   const { data } = client.storage.from("portfolio-media").getPublicUrl(path);

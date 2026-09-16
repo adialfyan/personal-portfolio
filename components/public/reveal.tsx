@@ -31,8 +31,9 @@ export function Reveal({ children, className, as = "div" }: RevealProps) {
           clipPath: "inset(0% 0 0% 0)",
           y: 0,
           opacity: 1,
-          duration: 0.7,
+          duration: 0.65,
           ease: "power3.out",
+          clearProps: "clipPath,transform",
           scrollTrigger: {
             trigger: el,
             start: "top 88%",

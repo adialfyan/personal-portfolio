@@ -28,7 +28,7 @@ export default async function AboutPage() {
   const profile = await getSiteProfile();
   const socialLinks = await getVisibleSocialLinks(profile?.id ?? null);
 
-  const name = profile?.full_name ?? "Personal Portfolio";
+  const name = profile?.full_name || "Adi Alfian Hafis";
   const portraitUrl = getMediaUrl(profile?.portrait_path);
 
   return (
@@ -37,8 +37,8 @@ export default async function AboutPage() {
 
       <main className="flex-1">
         <section className="mx-auto max-w-[1440px] px-6 pt-14 pb-16 md:px-10 md:pt-20 md:pb-24">
-          <p className="font-mono text-xs tracking-[0.2em] uppercase text-muted">
-            About / 01
+          <p className="text-xs font-medium tracking-[0.2em] uppercase text-muted">
+            About
           </p>
           <h1
             className="mt-6 max-w-5xl text-[clamp(3rem,9vw,7rem)] leading-[0.9] tracking-tight"
@@ -59,12 +59,12 @@ export default async function AboutPage() {
                 />
               ) : (
                 <div className="flex aspect-[4/5] items-center justify-center border border-border bg-surface">
-                  <span className="font-mono text-xs tracking-[0.2em] uppercase text-muted">
-                    Portrait — set in admin
+                  <span className="text-xs font-medium tracking-[0.2em] uppercase text-muted">
+                    Portrait &mdash; set in admin
                   </span>
                 </div>
               )}
-              <dl className="mt-8 space-y-4 font-mono text-xs tracking-[0.2em] uppercase">
+              <dl className="mt-8 space-y-4 text-xs font-medium tracking-[0.2em] uppercase">
                 {profile?.location && (
                   <div className="flex justify-between gap-4 border-t border-border pt-3">
                     <dt className="text-muted">Based in</dt>
@@ -129,14 +129,14 @@ export default async function AboutPage() {
                 </p>
               )}
 
-              <h2 className="mt-14 font-mono text-xs tracking-[0.2em] uppercase text-muted">
+              <h2 className="mt-14 text-xs font-medium tracking-[0.2em] uppercase text-muted">
                 Capabilities
               </h2>
               <ul className="mt-4 grid grid-cols-1 gap-x-6 sm:grid-cols-2">
                 {CAPABILITIES.map((c) => (
                   <li
                     key={c}
-                    className="border-t border-border py-3 font-mono text-xs tracking-[0.2em] uppercase"
+                    className="border-t border-border py-3 text-xs font-medium tracking-[0.2em] uppercase"
                   >
                     {c}
                   </li>
@@ -145,7 +145,7 @@ export default async function AboutPage() {
 
               {socialLinks.length > 0 && (
                 <>
-                  <h2 className="mt-14 font-mono text-xs tracking-[0.2em] uppercase text-muted">
+                  <h2 className="mt-14 text-xs font-medium tracking-[0.2em] uppercase text-muted">
                     Elsewhere
                   </h2>
                   <ul className="mt-4">
@@ -158,9 +158,9 @@ export default async function AboutPage() {
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-between hover:text-accent"
+                          className="flex items-center justify-between hover:text-foreground transition-colors"
                         >
-                          <span className="font-mono text-xs tracking-[0.2em] uppercase">
+                          <span className="text-xs font-medium tracking-[0.2em] uppercase">
                             {link.label ?? link.platform}
                           </span>
                           <span aria-hidden="true">↗</span>
@@ -173,7 +173,7 @@ export default async function AboutPage() {
 
               <Link
                 href="/contact"
-                className="mt-14 inline-block bg-dark px-6 py-4 font-mono text-xs tracking-[0.2em] uppercase text-ivory transition-colors hover:bg-accent"
+                className="mt-14 inline-block bg-dark px-6 py-4 text-xs font-medium tracking-[0.2em] uppercase text-ivory transition-colors hover:bg-neutral-800"
               >
                 Get in touch ↗
               </Link>

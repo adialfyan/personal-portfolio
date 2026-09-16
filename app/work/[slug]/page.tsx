@@ -27,18 +27,29 @@ export async function generateMetadata({
   const { slug } = await params;
   const project = await getProjectBySlug(slug);
   if (!project) return { title: "Project not found" };
+  const description = project.summary ?? project.overview ?? "Selected software engineering case study.";
   return {
     title: project.title,
-    description: project.summary ?? project.overview ?? undefined,
+    description,
+    openGraph: {
+      title: `${project.title} — Selected Work`,
+      description,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${project.title} — Selected Work`,
+      description,
+    },
   };
 }
 
 const SECTIONS = [
   { key: "overview", label: "Overview" },
-  { key: "problem", label: "Problem" },
-  { key: "approach", label: "Approach" },
-  { key: "technical_decisions", label: "Technical Decisions" },
-  { key: "outcome", label: "Outcome" },
+  { key: "problem", label: "The Challenge" },
+  { key: "approach", label: "The Approach" },
+  { key: "technical_decisions", label: "Key Features & Architecture" },
+  { key: "outcome", label: "Objectives & Impact" },
   { key: "reflection", label: "Reflection" },
 ] as const;
 
@@ -55,7 +66,7 @@ export default async function ProjectPage({
   ]);
   const socialLinks = await getVisibleSocialLinks(profile?.id ?? null);
 
-  const name = profile?.full_name ?? "Personal Portfolio";
+  const name = profile?.full_name || "Adi Alfian Hafis";
   const coverUrl = getMediaUrl(project.cover_image_path);
   const sections = SECTIONS.filter((s) => project[s.key]);
 
@@ -65,11 +76,11 @@ export default async function ProjectPage({
 
       <main className="flex-1">
         <section className="mx-auto max-w-[1440px] px-6 pt-14 pb-12 md:px-10 md:pt-20">
-          <p className="font-mono text-xs tracking-[0.2em] uppercase text-muted">
-            <Link href="/#work" className="hover:text-accent">
+          <p className="text-xs font-medium tracking-[0.2em] uppercase text-muted">
+            <Link href="/#work" className="hover:text-foreground transition-colors">
               Work
             </Link>{" "}
-            / {project.year ?? "—"}
+            &mdash; {project.year ?? "—"}
           </p>
           <h1
             className="mt-6 max-w-6xl text-[clamp(3rem,9vw,7.5rem)] leading-[0.9] tracking-tight"
@@ -83,7 +94,7 @@ export default async function ProjectPage({
             </p>
           )}
 
-          <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-border pt-8 font-mono text-xs tracking-[0.2em] uppercase md:grid-cols-4">
+          <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-border pt-8 text-xs font-medium tracking-[0.2em] uppercase md:grid-cols-4">
             {project.role && (
               <div>
                 <dt className="text-muted">Role</dt>
@@ -100,7 +111,7 @@ export default async function ProjectPage({
               <div>
                 <dt className="text-muted">Stack</dt>
                 <dd className="mt-2 leading-loose">
-                  {project.technologies.map((t) => t.name).join(" / ")}
+                  {project.technologies.map((t) => t.name).join(" • ")}
                 </dd>
               </div>
             )}
@@ -173,8 +184,8 @@ export default async function ProjectPage({
                   key={section.key}
                   className="col-span-4 md:col-span-7 md:col-start-3"
                 >
-                  <p className="font-mono text-xs tracking-[0.2em] uppercase text-accent">
-                    {String(i + 1).padStart(2, "0")} / {section.label}
+                  <p className="text-xs font-medium tracking-[0.2em] uppercase text-foreground">
+                    {String(i + 1).padStart(2, "0")} &mdash; {section.label}
                   </p>
                   <div className="mt-4 max-w-3xl text-lg leading-relaxed whitespace-pre-line">
                     {project[section.key]}
@@ -205,7 +216,7 @@ export default async function ProjectPage({
                         />
                       </span>
                       {m.caption && (
-                        <figcaption className="mt-3 font-mono text-xs tracking-[0.2em] uppercase text-muted">
+                        <figcaption className="mt-3 text-xs font-medium tracking-[0.2em] uppercase text-muted">
                           {m.caption}
                         </figcaption>
                       )}
@@ -228,11 +239,11 @@ export default async function ProjectPage({
                   href={`/work/${adjacent.previous.slug}`}
                   className="group block"
                 >
-                  <span className="font-mono text-xs tracking-[0.2em] uppercase text-muted">
+                  <span className="text-xs font-medium tracking-[0.2em] uppercase text-muted">
                     ← Previous
                   </span>
                   <span
-                    className="mt-3 block text-2xl tracking-tight group-hover:text-accent md:text-4xl"
+                    className="mt-3 block text-2xl tracking-tight group-hover:underline md:text-4xl"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
                     {adjacent.previous.title}
@@ -241,7 +252,7 @@ export default async function ProjectPage({
               ) : (
                 <Link
                   href="/#work"
-                  className="block font-mono text-xs tracking-[0.2em] uppercase text-muted hover:text-accent"
+                  className="block text-xs font-medium tracking-[0.2em] uppercase text-muted hover:text-foreground transition-colors"
                 >
                   ← All work
                 </Link>
@@ -250,11 +261,11 @@ export default async function ProjectPage({
             <div className="py-10 pl-6 text-right">
               {adjacent.next && (
                 <Link href={`/work/${adjacent.next.slug}`} className="group block">
-                  <span className="font-mono text-xs tracking-[0.2em] uppercase text-muted">
+                  <span className="text-xs font-medium tracking-[0.2em] uppercase text-muted">
                     Next →
                   </span>
                   <span
-                    className="mt-3 block text-2xl tracking-tight group-hover:text-accent md:text-4xl"
+                    className="mt-3 block text-2xl tracking-tight group-hover:underline md:text-4xl"
                     style={{ fontFamily: "var(--font-display)" }}
                   >
                     {adjacent.next.title}

@@ -1,33 +1,179 @@
 @import "tailwindcss";
 
 :root {
-  --background: #eee9df;
-  --foreground: #171714;
+  --background: #ffffff;
+  --foreground: #0a0a0a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: #e5dfd3;
-  --color-muted: #77736a;
-  --color-border: #aaa499;
-  --color-accent: #ff4f00;
-  --color-ink: #171714;
-  --color-dark: #11110f;
-  --color-ivory: #eee9df;
+  --color-background: #ffffff;
+  --color-foreground: #0a0a0a;
+  --color-surface: #f5f5f5;
+  --color-muted: #737373;
+  --color-border: #e5e5e5;
+  --color-accent: #000000;
+  --color-ink: #0a0a0a;
+  --color-dark: #0a0a0a;
+  --color-ivory: #ffffff;
 
   --font-display: var(--font-display);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-geist-sans);
+}
+
+html {
+  background-color: #ffffff !important;
+  color: #0a0a0a;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background-color: #ffffff !important;
+  color: #0a0a0a !important;
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 ::selection {
-  background: #ff4f00;
-  color: #eee9df;
+  background: #0a0a0a;
+  color: #ffffff;
 }
+
+html.lenis,
+html.lenis body {
+  height: auto !important;
+}
+
+/* Editorial long-form reading typography */
+.editorial-content h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #0a0a0a;
+  margin-top: 3.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.editorial-content h3 {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3vw, 1.75rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: #0a0a0a;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.editorial-content p {
+  margin-bottom: 1.5rem;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: rgba(10, 10, 10, 0.9);
+}
+
+.editorial-content ul,
+.editorial-content ol {
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: rgba(10, 10, 10, 0.9);
+}
+
+.editorial-content ul {
+  list-style-type: disc;
+}
+
+.editorial-content ol {
+  list-style-type: decimal;
+}
+
+.editorial-content li {
+  margin-bottom: 0.5rem;
+}
+
+.editorial-content pre {
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 1.25rem 1.5rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--color-border);
+  background-color: #f9f9f9;
+  overflow-x: auto;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.editorial-content code {
+  font-family: var(--font-geist-sans), sans-serif;
+  background-color: #f3f3f3;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.9em;
+}
+
+.editorial-content pre code {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+}
+
+.editorial-content blockquote {
+  border-left: 2px solid #0a0a0a;
+  padding-left: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  line-height: 1.6;
+  color: #262626;
+}
+
+.editorial-content strong {
+  font-weight: 600;
+  color: #0a0a0a;
+}
+
+.editorial-content hr {
+  border: 0;
+  border-top: 1px solid var(--color-border);
+  margin-top: 3rem;
+  margin-bottom: 3rem;
+}
+
+.editorial-content a {
+  color: #0a0a0a;
+  text-decoration: underline;
+  text-decoration-color: rgba(10, 10, 10, 0.3);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.15s ease;
+}
+
+.editorial-content a:hover {
+  text-decoration-color: #0a0a0a;
+}
+
+.editorial-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
+  font-size: 0.95rem;
+}
+
+.editorial-content th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #0a0a0a;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+.editorial-content td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+  color: rgba(10, 10, 10, 0.85);
+}
+

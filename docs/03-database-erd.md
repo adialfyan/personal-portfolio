@@ -105,6 +105,51 @@ erDiagram
         uuid technology_id PK, FK
     }
 
+    WRITINGS ||--o{ WRITING_TAGS : tagged_with
+    ADMIN_USERS ||--o{ WRITINGS : authors
+
+    WRITINGS {
+        uuid id PK
+        uuid created_by FK
+        string title
+        string slug UK
+        string subtitle
+        text summary
+        text content
+        string category
+        int reading_time_minutes
+        string status
+        boolean is_featured
+        int sort_order
+        string cover_image_path
+        timestamptz published_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
+    WRITING_TAGS {
+        uuid id PK
+        uuid writing_id FK
+        string tag
+    }
+
+    SHELF_ITEMS {
+        uuid id PK
+        string title
+        string media_type
+        string creator
+        string year
+        text notes
+        int rating
+        string cover_image_path
+        string external_url
+        boolean is_favorite
+        int sort_order
+        date logged_at
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
     CONTACT_MESSAGES {
         uuid id PK
         string name

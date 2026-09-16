@@ -1,19 +1,27 @@
 import Link from "next/link";
 import { requireAdmin } from "@/lib/auth";
-import { getAllProjects, getMessageStats } from "@/lib/queries/admin";
+import {
+  getAllProjects,
+  getAllShelfItemsAdmin,
+  getAllWritingsAdmin,
+  getMessageStats,
+} from "@/lib/queries/admin";
 
 export default async function AdminOverview() {
   const admin = await requireAdmin("/admin");
-  const [projects, stats] = await Promise.all([
+  const [projects, writings, shelfItems, stats] = await Promise.all([
     getAllProjects(),
+    getAllWritingsAdmin(),
+    getAllShelfItemsAdmin(),
     getMessageStats(),
   ]);
 
   const counts = {
-    total: projects.length,
-    published: projects.filter((p) => p.status === "published").length,
-    drafts: projects.filter((p) => p.status === "draft").length,
-    featured: projects.filter((p) => p.is_featured).length,
+    projects: projects.length,
+    featuredProjects: projects.filter((p) => p.is_featured).length,
+    writings: writings.length,
+    shelf: shelfItems.length,
+    unreadMessages: stats.unread,
   };
 
   return (
@@ -30,10 +38,10 @@ export default async function AdminOverview() {
 
       <div className="mt-10 grid grid-cols-2 gap-4 md:grid-cols-4">
         {[
-          { label: "Projects", value: counts.total, href: "/admin/projects" },
-          { label: "Published", value: counts.published, href: "/admin/projects" },
-          { label: "Drafts", value: counts.drafts, href: "/admin/projects" },
-          { label: "Unread messages", value: stats.unread, href: "/admin/messages" },
+          { label: "Projects", value: counts.projects, href: "/admin/projects" },
+          { label: "Writings", value: counts.writings, href: "/admin/writings" },
+          { label: "Shelf Items", value: counts.shelf, href: "/admin/shelf" },
+          { label: "Unread messages", value: counts.unreadMessages, href: "/admin/messages" },
         ].map((card) => (
           <Link
             key={card.label}
@@ -94,9 +102,9 @@ export default async function AdminOverview() {
         )}
       </div>
 
-      {counts.featured !== 3 && (
+      {counts.featuredProjects !== 3 && (
         <p className="mt-8 text-sm text-muted">
-          Homepage shows up to 3 featured projects. Currently {counts.featured}{" "}
+          Homepage shows up to 3 featured projects. Currently {counts.featuredProjects}{" "}
           featured.
         </p>
       )}
